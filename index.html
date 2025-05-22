@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos Interactivos en JavaScript</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.5s;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: white;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            transition: color 0.3s;
+        }
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #34495e;
+            transition: color 0.3s;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 10px 5px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        .hidden {
+            display: none;
+        }
+        #reloj {
+            font-size: 24px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+            color: #3498db;
+        }
+        .section {
+            margin: 30px 0;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        .section h2 {
+            color: #3498db;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Eventos Interactivos en JavaScript</h1>
+        <p>Este es un ejemplo de cómo utilizar eventos en JavaScript para crear páginas interactivas.</p>
+        
+        <div class="section">
+            <h2>Parte 1: Eventos básicos</h2>
+            <button id="cambiarTitulo">Cambiar Título</button>
+            <button id="cambiarFondo">Cambiar Fondo</button>
+            <div id="mensajeTitulo" class="message hidden"></div>
+            
+            <div class="message" id="eventosCarga"></div>
+            
+            <div>
+                <label for="campoTexto">Escribe algo aquí:</label>
+                <input type="text" id="campoTexto" placeholder="Interactúa conmigo...">
+                <div id="mensajeTexto" class="message"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Parte 2: Temporizadores</h2>
+            <div id="mensajeOculto" class="message hidden">¡Este mensaje apareció después de 3 segundos!</div>
+            <div id="reloj">00:00:00</div>
+        </div>
+        
+        <div class="section">
+            <h2>Parte 3: Interacción modular</h2>
+            <button id="botonPersonalizado">Mensaje Personalizado</button>
+            <span id="contadorClics"></span>
+            <div id="mensajePersonalizado" class="message"></div>
+        </div>
+    </div>
+
+    <script>
+        // Parte 1: Eventos básicos
+        
+        // Evento load - Mensaje de bienvenida
+        window.addEventListener('load', function() {
+            document.getElementById('eventosCarga').textContent = '¡Bienvenido! La página se ha cargado completamente.';
+        });
+        
+        // Evento click - Cambiar título
+        document.getElementById('cambiarTitulo').addEventListener('click', function() {
+            const titulo = document.querySelector('h1');
+            titulo.textContent = 'Título Modificado con JavaScript';
+            titulo.style.color = '#e74c3c';
+        });
+        
+        // Evento mouseover - Cambiar color del párrafo
+        document.querySelector('p').addEventListener('mouseover', function() {
+            this.style.color = '#e74c3c';
+        });
+        
+        // Evento mouseout - Restaurar color del párrafo
+        document.querySelector('p').addEventListener('mouseout', function() {
+            this.style.color = '#34495e';
+        });
+        
+        // Evento click - Cambiar fondo
+        document.getElementById('cambiarFondo').addEventListener('click', function() {
+            const colores = ['#f8e9a1', '#c6def1', '#f7d9d9', '#d1f5d3', '#e8daef'];
+            const colorAleatorio = colores[Math.floor(Math.random() * colores.length)];
+            document.body.style.backgroundColor = colorAleatorio;
+            
+            const mensaje = document.getElementById('mensajeTitulo');
+            mensaje.textContent = '¡Has cambiado el color de fondo!';
+            mensaje.classList.remove('hidden');
+        });
+        
+        // Campo de texto - Eventos focus, blur, keyup
+        const campoTexto = document.getElementById('campoTexto');
+        const mensajeTexto = document.getElementById('mensajeTexto');
+        
+        campoTexto.addEventListener('focus', function() {
+            mensajeTexto.textContent = 'Estás enfocado en el campo de texto';
+            mensajeTexto.style.backgroundColor = '#e8f4f8';
+        });
+        
+        campoTexto.addEventListener('blur', function() {
+            mensajeTexto.textContent = 'Has salido del campo de texto';
+            mensajeTexto.style.backgroundColor = '#f8f9fa';
+        });
+        
+        campoTexto.addEventListener('keyup', function() {
+            mensajeTexto.textContent = `Estás escribiendo: "${this.value}" (${this.value.length} caracteres)`;
+            if (this.value.length > 10) {
+                mensajeTexto.style.color = '#e74c3c';
+            } else {
+                mensajeTexto.style.color = '#34495e';
+            }
+        });
+        
+        // Parte 2: Temporizadores
+        
+        // setTimeout - Mostrar mensaje oculto
+        setTimeout(function() {
+            document.getElementById('mensajeOculto').classList.remove('hidden');
+        }, 3000);
+        
+        // setInterval - Reloj digital
+        setInterval(function() {
+            const ahora = new Date();
+            const horas = ahora.getHours().toString().padStart(2, '0');
+            const minutos = ahora.getMinutes().toString().padStart(2, '0');
+            const segundos = ahora.getSeconds().toString().padStart(2, '0');
+            document.getElementById('reloj').textContent = `${horas}:${minutos}:${segundos}`;
+        }, 1000);
+        
+        // Parte 3: Interacción modular
+        
+        // Variable para contar clics
+        let contadorClics = 0;
+        const maxClics = 5;
+        
+        // Actualizar contador de clics
+        function actualizarContador() {
+            document.getElementById('contadorClics').textContent = 
+                ` (Clics: ${contadorClics}/${maxClics})`;
+        }
+        
+        // Función para manejar el evento de clic
+        function manejarClicPersonalizado() {
+            contadorClics++;
+            
+            const mensajes = [
+                '¡Hola! Este es tu primer mensaje personalizado.',
+                '¡Muy bien! Sigues interactuando con la página.',
+                '¡Genial! Ya llevas tres clics.',
+                '¡Un clic más y alcanzarás el límite!',
+                '¡Este es tu último mensaje! El botón se desactivará.'
+            ];
+            
+            document.getElementById('mensajePersonalizado').textContent = mensajes[contadorClics - 1];
+            actualizarContador();
+            
+            // Comprobar si hemos alcanzado el máximo de clics
+            if (contadorClics >= maxClics) {
+                // Quitar el event listener
+                this.removeEventListener('click', manejarClicPersonalizado);
+                this.disabled = true;
+                this.textContent = 'Botón Desactivado';
+                this.style.backgroundColor = '#ccc';
+            }
+        }
+        
+        // Asignar el manejador de eventos al botón
+        const botonPersonalizado = document.getElementById('botonPersonalizado');
+        botonPersonalizado.addEventListener('click', manejarClicPersonalizado);
+        
+        // Inicialización del contador
+        actualizarContador();
+    </script>
+</body>
+</html>
